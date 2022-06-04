@@ -4,6 +4,7 @@ import 'package:firebaseflutter/firebase_options.dart';
 import 'package:firebaseflutter/notificationService/local_notification_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +12,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  LocalNotificationService.initialize();
   runApp(const MyApp());
 }
 
@@ -67,7 +67,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -83,62 +83,99 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    // 1. This method call when app in terminated state and you get a notification
-    // when you click on notification app open from terminated state and you can get notification data in this method
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (kDebugMode) {
-        print("FirebaseMessaging.instance.getInitialMessage********");
-      }
-      if (message != null) {
-        if (kDebugMode) {
-          print("New Notification********");
-        }
-        // if (message.data['_id'] != null) {
-        //   Navigator.of(context).push(
-        //     MaterialPageRoute(
-        //       builder: (context) => DemoScreen(
-        //         id: message.data['_id'],
-        //       ),
-        //     ),
-        //   );
-        // }
-      }
-    });
+    LocalNotificationService.initialize(context);
+    registerNotification();
+  }
 
-    // 2. This method only call when App in forground it mean app must be opened
-    FirebaseMessaging.onMessage.listen(
-      (message) {
-        if (kDebugMode) {
-          print("FirebaseMessaging.onMessage.listen********");
-        }
-        if (message.notification != null) {
-          if (kDebugMode) {
-            print(message.notification!.title);
-            print(message.notification!.body);
-            print("message.data11 ${message.data}");
-          }
-          LocalNotificationService.createAndDisplayNotification(message);
-        }
-      },
+  void registerNotification() async {
+    // 1. Initialize the Firebase app
+    await Firebase.initializeApp();
+
+    // 2. Instantiate Firebase Messaging
+    _messaging = FirebaseMessaging.instance;
+
+    // 3. On iOS, this helps to take the user permissions
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
     );
 
-    // 3. This method only call when App in background and not terminated(not closed)
-    FirebaseMessaging.onMessageOpenedApp.listen(
-      (message) {
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+      // 1. This method call when app in terminated state and you get a notification
+      // when you click on notification app open from terminated state and you can get notification data in this method
+      _messaging
+          .getInitialMessage()
+          .then((RemoteMessage? message) {
         if (kDebugMode) {
-          print("FirebaseMessaging.onMessageOpenedApp.listen********");
+          print("FirebaseMessaging.instance.getInitialMessage********");
         }
-        if (message.notification != null) {
+        if (message != null) {
           if (kDebugMode) {
-            print(message.notification!.title);
-            print(message.notification!.body);
-            print("message.data22 ********${message.data['id']}");
+            print("New Notification********");
           }
+          // if (message.data['_id'] != null) {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => DemoScreen(
+          //         id: message.data['_id'],
+          //       ),
+          //     ),
+          //   );
+          // }
         }
-      },
-    );
+      });
+
+
+      // 2. This method only call when App in forground it mean app must be opened
+      FirebaseMessaging.onMessage.listen(
+            (message) {
+          if (kDebugMode) {
+            print("FirebaseMessaging.onMessage.listen********");
+          }
+          if (message.notification != null) {
+            if (kDebugMode) {
+              print(message.notification!.title);
+              print(message.notification!.body);
+              print("message.data11 ${message.data}");
+            }
+            LocalNotificationService.createAndDisplayNotification(message);
+          }
+        },
+      );
+
+      // 3. This method only call when App in background and not terminated(not closed)
+      FirebaseMessaging.onMessageOpenedApp.listen(
+            (message) {
+          if (kDebugMode) {
+            print("FirebaseMessaging.onMessageOpenedApp.listen********");
+          }
+          if (message.notification != null) {
+            if (kDebugMode) {
+              print(message.notification!.title);
+              print(message.notification!.body);
+              print("message.data22 ********${message.data['title']}");
+            }
+          }
+        },
+      );
+    } else {
+      print('User declined or has not accepted permission');
+      showToast(
+        'you should allow permission',
+        context: context,
+        backgroundColor: Colors.red,
+        animation: StyledToastAnimation.scale,
+        reverseAnimation: StyledToastAnimation.fade,
+        position: StyledToastPosition.bottom,
+        animDuration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 3),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.linear,
+      );
+    }
   }
 
   @override
