@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebaseflutter/home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:http/http.dart' as http;
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -52,19 +56,44 @@ class LocalNotificationService {
     );
   }
 
+  static Future<String> _downloadAndSaveFile(
+      String? url, String fileName) async {
+    final directory = await path_provider.getApplicationDocumentsDirectory();
+    final String filePath = '${directory.path}/$fileName.png';
+    final http.Response response = await http.get(Uri.parse(url!));
+    final File file = File(filePath);
+    await file.writeAsBytes(response.bodyBytes);
+    return filePath;
+  }
+
   static void createAndDisplayNotification(RemoteMessage message) async {
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-      const NotificationDetails notificationDetails = NotificationDetails(
+      String largeIconPath = await _downloadAndSaveFile(
+        message.notification?.android?.imageUrl,
+        'largeIcon',
+      );
+      final String bigPicturePath = await _downloadAndSaveFile(
+        message.notification?.android?.imageUrl,
+        'bigPicture',
+      );
+
+      NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
             "FahmyAbadaNotificationApp",
             "FahmyAbadaNotificationAppChannel",
             playSound: true,
             importance: Importance.max,
             priority: Priority.high,
+            largeIcon: FilePathAndroidBitmap(largeIconPath),
+            icon: message.notification?.android?.smallIcon,
+            styleInformation: BigPictureStyleInformation(
+              FilePathAndroidBitmap(bigPicturePath),
+              hideExpandedLargeIcon: true,
+            ),
           ),
-          iOS: IOSNotificationDetails(
+          iOS: const IOSNotificationDetails(
             presentAlert: true,
             presentBadge: true,
             presentSound: true,
@@ -72,8 +101,8 @@ class LocalNotificationService {
 
       await _notificationsPlugin.show(
         id,
-        message.data['title'],
-        message.data['body'],
+        message.notification!.title,
+        message.notification!.body,
         notificationDetails,
         //payload : holds the data that is passed through the notification when the notification is tapped
         payload: message.data['title'],

@@ -13,11 +13,11 @@ class Home extends StatelessWidget {
         // the App.build method, and use it to set our appbar title.
         title: const Text('Home'),
       ),
-      body: const Center(
+      body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Text(
-          'home page',
+          title,
         ),
       ),
        // This trailing comma makes auto-formatting nicer for build methods.

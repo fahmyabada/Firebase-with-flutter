@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebaseflutter/firebase_options.dart';
+import 'package:firebaseflutter/home.dart';
 import 'package:firebaseflutter/notificationService/local_notification_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  late FirebaseMessaging _messaging;
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -88,11 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void registerNotification() async {
-    // 1. Initialize the Firebase app
-    await Firebase.initializeApp();
-
     // 2. Instantiate Firebase Messaging
-    _messaging = FirebaseMessaging.instance;
+     _messaging = FirebaseMessaging.instance;
 
     // 3. On iOS, this helps to take the user permissions
     NotificationSettings settings = await _messaging.requestPermission(
@@ -103,7 +101,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
+      if (kDebugMode) {
+        print('User granted permission');
+      }
       // 1. This method call when app in terminated state and you get a notification
       // when you click on notification app open from terminated state and you can get notification data in this method
       _messaging
@@ -116,15 +116,16 @@ class _MyHomePageState extends State<MyHomePage> {
           if (kDebugMode) {
             print("New Notification********");
           }
-          // if (message.data['_id'] != null) {
-          //   Navigator.of(context).push(
-          //     MaterialPageRoute(
-          //       builder: (context) => DemoScreen(
-          //         id: message.data['_id'],
-          //       ),
-          //     ),
-          //   );
-          // }
+
+          if (message.data['title'] != null) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Home(
+                  title: message.data['title'],
+                ),
+              ),
+            );
+          }
         }
       });
 
@@ -158,11 +159,22 @@ class _MyHomePageState extends State<MyHomePage> {
               print(message.notification!.body);
               print("message.data22 ********${message.data['title']}");
             }
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => Home(
+                  title: message.data['title'],
+                ),
+              ),
+            );
           }
         },
       );
     } else {
-      print('User declined or has not accepted permission');
+
+      if (kDebugMode) {
+        print('User declined or has not accepted permission');
+      }
+
       showToast(
         'you should allow permission',
         context: context,
