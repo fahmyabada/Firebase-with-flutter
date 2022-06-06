@@ -310,5 +310,5 @@ after initialize we create channel in createAndDisplayNotification method
 
  6- to run on ios simulator 
 
-    create push.json and run
+    create pushes dirctory and inside create push.json and run
     xcrun simctl push booted {applicationId that in (bild.gradle)} pushes/push.json
