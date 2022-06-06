@@ -307,3 +307,7 @@ after initialize we create channel in createAndDisplayNotification method
     2-Select the GoogleService-Info.plist file you downloaded, and ensure the "Copy items if needed" checkbox is enabled 
     3-This link will help you do that
       https://drive.google.com/drive/folders/1MfBHPpH3Wq7WSk2oKx8sv41iKygvfaUJ?usp=sharing
+
+ 6- to run on ios simulator 
+    create push.json and run
+    xcrun simctl push booted {applicationId that in (bild.gradle)} pushes/push.json

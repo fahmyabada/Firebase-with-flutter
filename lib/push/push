@@ -7,7 +7,3 @@
         }
     }
 }
-
-
-// to run this push run
-// xcrun simctl push booted {applicationId that in (bild.gradle)} pushes/push.json
