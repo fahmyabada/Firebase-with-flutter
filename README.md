@@ -309,5 +309,6 @@ after initialize we create channel in createAndDisplayNotification method
       https://drive.google.com/drive/folders/1MfBHPpH3Wq7WSk2oKx8sv41iKygvfaUJ?usp=sharing
 
  6- to run on ios simulator 
+
     create push.json and run
     xcrun simctl push booted {applicationId that in (bild.gradle)} pushes/push.json
