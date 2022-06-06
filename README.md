@@ -89,19 +89,19 @@ and create simple notification
 
 ## explain way to create notification
 
-      #go inside lib -> create folder -> notificationservice -> create file inside notificationservice  -> local_notification_service.dart
-      #go inside the local_notification_service.dart and create a class
+go inside lib -> create folder -> notificationservice -> create file inside notificationservice  -> local_notification_service.dart
+go inside the local_notification_service.dart and create a class
 
       class LocalNotificationService{
 
       }
 
-      #inside class create instance of FlutterLocalNotificationsPlugin see below
+inside class create instance of FlutterLocalNotificationsPlugin see below
 
       static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-      after this create a method initialize to initialize  localnotification
+after this create a method initialize to initialize  localNotification
 
       static void initialize(BuildContext context) {
         //Initialization Settings for iOS
@@ -147,7 +147,7 @@ and create simple notification
         );
       }
 
-##after initialize we create downloadAndSaveFile method for download image that get in notification
+# after initialize we create downloadAndSaveFile method for download image that get in notification
 
     static Future<String> _downloadAndSaveFile(
         String? url, String fileName) async {
@@ -159,7 +159,7 @@ and create simple notification
         return filePath;
     }
 
-##after initialize we create channel in createAndDisplayNotification method
+# after initialize we create channel in createAndDisplayNotification method
 
     static void createAndDisplayNotification(RemoteMessage message) async {
         try {
