@@ -18,15 +18,18 @@ and create simple notification
 
 ## explain way to using FCM
   1- add these 3 Dependencies in pubspec.yaml
-      1.firebase_core: ^1.12.0
-      2.firebase_messaging: ^11.2.6
-      3.flutter_local_notifications: ^9.2.0
+
+      firebase_core: ^1.12.0
+      firebase_messaging: ^11.2.6
+      flutter_local_notifications: ^9.2.0
 
   2- Add this lines to main() method
+
      1. WidgetsFlutterBinding.ensureInitialized();
      2. await Firebase.initializeApp();
 
   3- Now write some code in main.dart to start firebase background services
+
      1. add this method after import statement in main.dart
           Future<void> backgroundHandler(RemoteMessage message) async {
           print(message.data.toString());
@@ -36,56 +39,110 @@ and create simple notification
      2. call this method from main method after await Firebase.initializeApp();
         FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
-  4-  @override
-      void initState() {
-      super.initState();
+  4- after that we create localNotification 
 
-          // 1. This method call when app in terminated state or closed and you get a notification
+      void registerNotification() async {
+        // 2. Instantiate Firebase Messaging
+        _messaging = FirebaseMessaging.instance;
+    
+        // 3. On iOS, this helps to take the user permissions
+        NotificationSettings settings = await _messaging.requestPermission(
+          alert: true,
+          badge: true,
+          provisional: false,
+          sound: true,
+        );
+    
+        if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+          if (kDebugMode) {
+            print('User granted permission');
+          }
+          // 1. This method call when app in terminated state and you get a notification
           // when you click on notification app open from terminated state and you can get notification data in this method
-
-          FirebaseMessaging.instance.getInitialMessage().then(
-            (message) {
-              print("FirebaseMessaging.instance.getInitialMessage");
-              if (message != null) {
-                print("New Notification");
-                // if (message.data['_id'] != null) {
-                //   Navigator.of(context).push(
-                //     MaterialPageRoute(
-                //       builder: (context) => DemoScreen(
-                //         id: message.data['_id'],
-                //       ),
-                //     ),
-                //   );
-                // }
+          _messaging
+              .getInitialMessage()
+              .then((RemoteMessage? message) {
+            if (kDebugMode) {
+              print("FirebaseMessaging.instance.getInitialMessage********");
+            }
+            if (message != null) {
+              if (kDebugMode) {
+                print("New Notification********");
               }
-            },
-          );
-
+    
+              if (message.data['title'] != null) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Home(
+                      title: message.data['title'],
+                    ),
+                  ),
+                );
+              }
+            }
+          });
+    
+    
           // 2. This method only call when App in forground it mean app must be opened
           FirebaseMessaging.onMessage.listen(
-            (message) {
-              print("FirebaseMessaging.onMessage.listen");
+                (message) {
+              if (kDebugMode) {
+                print("FirebaseMessaging.onMessage.listen********");
+              }
               if (message.notification != null) {
-                print(message.notification!.title);
-                print(message.notification!.body);
-                print("message.data11 ${message.data}");
-                //LocalNotificationService.createAndDisplayNotification(message);
+                if (kDebugMode) {
+                  print(message.notification!.title);
+                  print(message.notification!.body);
+                  print("message.data11 ${message.data}");
+                }
+                LocalNotificationService.createAndDisplayNotification(message);
               }
             },
           );
-
+    
           // 3. This method only call when App in background and not terminated(not closed)
           FirebaseMessaging.onMessageOpenedApp.listen(
-            (message) {
-              print("FirebaseMessaging.onMessageOpenedApp.listen");
+                (message) {
+              if (kDebugMode) {
+                print("FirebaseMessaging.onMessageOpenedApp.listen********");
+              }
               if (message.notification != null) {
-                print(message.notification!.title);
-                print(message.notification!.body);
-                print("message.data22 ${message.data['_id']}");
+                if (kDebugMode) {
+                  print(message.notification!.title);
+                  print(message.notification!.body);
+                  print("message.data22 ********${message.data['title']}");
+                }
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Home(
+                      title: message.data['title'],
+                    ),
+                  ),
+                );
               }
             },
           );
+        } else {
+    
+          if (kDebugMode) {
+            print('User declined or has not accepted permission');
+          }
+    
+          showToast(
+            'you should allow permission',
+            context: context,
+            backgroundColor: Colors.red,
+            animation: StyledToastAnimation.scale,
+            reverseAnimation: StyledToastAnimation.fade,
+            position: StyledToastPosition.bottom,
+            animDuration: const Duration(seconds: 1),
+            duration: const Duration(seconds: 3),
+            curve: Curves.elasticOut,
+            reverseCurve: Curves.linear,
+          );
         }
+    }
+
 
 ## explain way to create notification
 
