@@ -1,0 +1,13 @@
+{
+    "aps":{
+        "alert":{
+            "title":"push title",
+            "subtitle":"push sub title",
+            "body":"push body",
+        }
+    }
+}
+
+
+// to run this push run
+// xcrun simctl push booted {applicationId that in (bild.gradle)} pushes/push.json
