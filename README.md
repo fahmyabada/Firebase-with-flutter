@@ -159,11 +159,10 @@ and create simple notification
     }
 
 ##after initialize we create channel in createAndDisplayNotification method
-
- static void createAndDisplayNotification(RemoteMessage message) async {
+    static void createAndDisplayNotification(RemoteMessage message) async {
     try {
           final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    
+
           String largeIconPath = await _downloadAndSaveFile(
             message.notification?.android?.imageUrl,
             'largeIcon',
@@ -206,7 +205,7 @@ and create simple notification
             print(e);
           }
         }
-}
+    }
 
 
 # to work notification call initialize method from void initState() method to can pass context parameter
