@@ -16,6 +16,7 @@ and create simple notification by flutter_local_notifications
       2. copy C:\Users\$NAMECOMPUTER\AppData\Local\Pub\Cache\bin  and put in path of users variable in environment
 
   3- Then, at the root of your Flutter project directory, run this command: $flutterfire configure --project=alesraa-25a4e
+  
   4- choose platform default android and ios press enter to start setup firebase , you can add linux and macos
 
 ## explain way to using FCM
