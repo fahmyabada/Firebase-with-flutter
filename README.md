@@ -159,8 +159,9 @@ and create simple notification
     }
 
 ##after initialize we create channel in createAndDisplayNotification method
+
     static void createAndDisplayNotification(RemoteMessage message) async {
-    try {
+        try {
           final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
           String largeIconPath = await _downloadAndSaveFile(
