@@ -279,3 +279,31 @@ after initialize we create channel in createAndDisplayNotification method
           }
         }
     }
+
+## explain way to setup on IOS
+
+ 1- in podfile should target > 9.0  exp: 10.0
+ 2- in Info.plist add
+
+     <key>FirebaseAppDelegateProxyEnabled</key>
+     <false/>
+     <key>NSBonjourServices</key>
+     <array>
+     <string>_dartobservatory._tcp</string>
+     </array>
+
+ 3- in xcode enable push notification
+    https://drive.google.com/drive/folders/1CYlVGyhR3poN9qzdsjunx2Yp1kHqmZQK?usp=sharing
+ 
+ 4- in AppDelegate add
+
+    1- import Firebase
+    2- FirebaseApp.configure() before GeneratedPluginRegistrant.register
+
+ 5- add GoogleService-Info.plist in ios folder
+   
+    1-Add the file to the project using Xcode. Using Xcode, open the project's ios/{projectName}.xcworkspace file.
+          Right-click Runner from the left-hand side project navigation within Xcode and select Add files
+    2-Select the GoogleService-Info.plist file you downloaded, and ensure the "Copy items if needed" checkbox is enabled 
+    3-This link will help you do that
+      https://drive.google.com/drive/folders/1MfBHPpH3Wq7WSk2oKx8sv41iKygvfaUJ?usp=sharing
