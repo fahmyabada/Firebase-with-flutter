@@ -45,6 +45,9 @@ and create simple notification
       void initState() {
        super.initState();
 
+        //to work notification call initialize method from void initState() method 
+        //to can pass context parameter
+
         LocalNotificationService.initialize(context);
         registerNotification();
       }       
@@ -212,7 +215,7 @@ after this create a method initialize to initialize  localNotification
         );
       }
 
-# after initialize we create downloadAndSaveFile method for download image that get in notification
+after initialize we create downloadAndSaveFile method for download image that get in notification
 
     static Future<String> _downloadAndSaveFile(
         String? url, String fileName) async {
@@ -224,7 +227,7 @@ after this create a method initialize to initialize  localNotification
         return filePath;
     }
 
-# after initialize we create channel in createAndDisplayNotification method
+after initialize we create channel in createAndDisplayNotification method
 
     static void createAndDisplayNotification(RemoteMessage message) async {
         try {
@@ -273,9 +276,3 @@ after this create a method initialize to initialize  localNotification
           }
         }
     }
-
-
-# to work notification call initialize method from void initState() method to can pass context parameter
-    LocalNotificationService.initialize();
-    
-    and uncomment LocalNotificationService.createAndDisplayNotification(message) method in FirebaseMessaging.onMessage.listen
