@@ -41,6 +41,14 @@ and create simple notification
 
   4- after that we create localNotification 
 
+      @override
+      void initState() {
+       super.initState();
+
+        LocalNotificationService.initialize(context);
+        registerNotification();
+      }       
+
       void registerNotification() async {
         // 2. Instantiate Firebase Messaging
         _messaging = FirebaseMessaging.instance;
