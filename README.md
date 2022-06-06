@@ -1,7 +1,7 @@
 # firebase
 In this topic I explain the setup of Firebase in an easy way provided by Firebase ,
 useing FCM (Firebase Cloud Messaging)
-and create simple notification
+and create simple notification by flutter_local_notifications
 
 ## explain way to set firebase
   1- to install Firebase CLI :
