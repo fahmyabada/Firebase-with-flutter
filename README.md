@@ -5,13 +5,13 @@ and create simple notification by flutter_local_notifications
 
 ## explain way to set firebase
   1- to install Firebase CLI :
-  1- install node by https://nodejs.org/en/
-  2- from start run install additional tools for node.js
-  3- from start run node.js command prompt and inside it run this command: $npm install -g firebase-tools
+      1- install node by https://nodejs.org/en/
+      2- from start run install additional tools for node.js
+      3- from start run node.js command prompt and inside it run this command: $npm install -g firebase-tools
 
   2- Install and run the FlutterFire CLI
-  1- From any directory, run this command: $dart pub global activate flutterfire_cli
-  2- copy C:\Users\$NAMECOMPUTER\AppData\Local\Pub\Cache\bin  and put in path of users variable in environment
+      1- From any directory, run this command: $dart pub global activate flutterfire_cli
+      2- copy C:\Users\$NAMECOMPUTER\AppData\Local\Pub\Cache\bin  and put in path of users variable in environment
 
   3- Then, at the root of your Flutter project directory, run this command: $flutterfire configure --project=alesraa-25a4e
   4- choose platform default android and ios press enter to start setup firebase , you can add linux and macos
