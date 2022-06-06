@@ -158,7 +158,7 @@ and create simple notification
         return filePath;
     }
 
-#after initialize we create channel in createAndDisplayNotification method
+##after initialize we create channel in createAndDisplayNotification method
 
  static void createAndDisplayNotification(RemoteMessage message) async {
     try {
