@@ -31,7 +31,20 @@ and create simple notification by flutter_local_notifications
      1. WidgetsFlutterBinding.ensureInitialized();
      2. await Firebase.initializeApp();
 
-  3- Now write some code in main.dart to start firebase background services
+  3- Add this lines to  Project Level build.gradle
+  
+    dependencies {
+        ...
+        // Add this line
+        classpath 'com.google.gms:google-services:4.3.13'
+      }
+      
+  4- Add this lines to  App Level build.gradle
+    
+    // add this line below apply plugin: 'com.android.application'
+    apply plugin: 'com.google.gms.google-services'
+
+  5- Now write some code in main.dart to start firebase background services
 
      1. add this method after import statement in main.dart
           Future<void> backgroundHandler(RemoteMessage message) async {
@@ -42,7 +55,7 @@ and create simple notification by flutter_local_notifications
      2. call this method from main method after await Firebase.initializeApp();
         FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
-  4- after that we create localNotification 
+  6- after that we create localNotification 
 
       @override
       void initState() {
